@@ -1,0 +1,897 @@
+---
+title: "FLSA Historical Consciousness Merge Code"
+author: "Cavan Bonner"
+date: "2024-03-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Packages from Library
+
+```{r}
+library(readr)
+library(plyr)
+library(tidyverse)
+library(psych)
+library(ggplot2)
+library(gridExtra)
+library(Hmisc)
+```
+
+# Read in Data 
+```{r}
+# wide_hc_edt <- read_csv("~/Documents/GitHub/FLSA_Ideology/wide_hc_edt.csv")
+# 
+# ContentNarrVars <- read_csv("~/Documents/GitHub/FLSA_Ideology/Copy of Narrative Variables for Merge with HC - Form Responses 1.csv")
+# 
+# FLSA_survey.extra <- read_csv("~/Documents/GitHub/FLSA_Ideology/FLSA-data-segmented PID final.csv")
+# 
+# FLSA_survey <- read_csv("~/Documents/GitHub/FLSA_Ideology/DownloadsCavanFLSA.csv")
+```
+
+
+# Create Merged Data
+```{r}
+# rename columns to be compatible
+# FLSA_survey <- FLSA_survey %>% dplyr::rename(ID = flsa_id)
+# FLSA_survey.extra <- FLSA_survey.extra %>% dplyr::rename(ID = flsa_id)
+# ContentNarrVars <- ContentNarrVars %>% dplyr::rename(ID = `Participant ID`)
+# 
+# FLSA_merge <- merge(wide_hc_edt, ContentNarrVars, by = "ID", all = TRUE)
+# FLSA_merge <- merge(FLSA_merge, FLSA_survey.extra, by = "ID", all = TRUE)
+# FLSA_merge <- merge(FLSA_merge, FLSA_survey, by = "ID", all = TRUE)
+
+# write_csv(FLSA_merge, "~/Documents/GitHub/FLSA_Ideology/FLSA_merge_forHCproject.csv")
+
+FLSA_merge <- read_csv("~/Documents/GitHub/FLSA_Ideology/FLSA_merge_forHCproject.csv")
+
+# FLSA_merge[!duplicated(as.list(FLSA_merge))]
+# FLSA_merge[!duplicated(lapply(FLSA_merge, summary))]
+# duplicated(t(FLSA_merge))
+```
+
+# Replicate Z-test code
+
+
+#### Two Proportion Z Test for difference in proportion identity integration by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$IdentityIntegration_binary)
+ztest.02 <- prop.test(c(37, 36), n = c(77, 54), correct = FALSE)
+ztest.02
+sqrt(ztest.02$statistic)
+```
+
+
+#### Two Proportion Z Test for difference in proportion identity integration by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$IdentityIntegration_binary)
+ztest.03 <- prop.test(x = c(27, 47), n = c(51, 83), correct = FALSE)
+ztest.03
+sqrt(ztest.03$statistic)
+```
+
+#### Two Proportion Z Test for difference in proportion binary involvement by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$InvolvBinary_composite)
+ztest.04 <- prop.test(x = c(21, 17), n = c(77, 54), correct = FALSE)
+ztest.04
+sqrt(ztest.04$statistic)
+```
+
+#### Two Proportion Z Test for difference in proportion binary involvement by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$InvolvBinary_composite)
+ztest.05 <- prop.test(x = c(14, 25), n = c(51, 83), correct = FALSE)
+ztest.05
+sqrt(ztest.05$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion JFK Assassination by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_JFK_composite)
+ztest.06 <- prop.test(x = c(35, 15), n = c(77, 54), correct = FALSE)
+ztest.06
+sqrt(ztest.06$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion JFK Assassination by gender
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_JFK_composite)
+ztest.17 <- prop.test(x = c(30, 22), n = c(83, 51), correct = FALSE)
+ztest.17
+sqrt(ztest.17$statistic)
+```
+
+
+
+#### Two proportion Z Test for difference in proportion Civil Rights Movement Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_CivilRights_composite)
+ztest.07 <- prop.test(x = c(15, 27), n = c(77, 54), correct = FALSE)
+ztest.07
+sqrt(ztest.07$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion Civil Rights Movement Recollection by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_CivilRights_composite)
+ztest.18 <- prop.test(x = c(30, 13), n = c(83, 51), correct = FALSE)
+ztest.18
+sqrt(ztest.18$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion Vietnam War Movement Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_Vietnam_composite)
+ztest.08 <- prop.test(x = c(28, 5), n = c(77, 54), correct = TRUE)
+ztest.08
+sqrt(ztest.08$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion Vietnam War Movement Recollection by gender
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_Vietnam_composite)
+ztest.19 <- prop.test(x = c(16, 17), n = c(83, 51), correct = TRUE)
+ztest.19
+sqrt(ztest.19$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion MLK Assassination Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_MLK_composite)
+ztest.09 <- prop.test(x = c(5, 16), n = c(77, 54), correct = TRUE)
+ztest.09
+sqrt(ztest.09$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion MLK Assassination Recollection by gender
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_MLK_composite)
+ztest.20 <- prop.test(x = c(16, 7), n = c(83, 51), correct = TRUE)
+ztest.20
+sqrt(ztest.20$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion 2008 Election Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_Obama08_composite)
+ztest.10 <- prop.test(x = c(4, 14), n = c(77, 54), correct = TRUE)
+ztest.10
+sqrt(ztest.10$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion 2008 Election Recollection by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_Obama08_composite)
+ztest.21 <- prop.test(x = c(13, 5), n = c(83, 51), correct = TRUE)
+ztest.21
+sqrt(ztest.21$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion 9/11 Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_911_composite)
+ztest.11 <- prop.test(x = c(14, 1), n = c(77, 54), correct = TRUE)
+ztest.11
+sqrt(ztest.11$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion 9/11 Recollection by gender
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_911_composite)
+ztest.22 <- prop.test(x = c(7, 9), n = c(83, 51), correct = TRUE)
+ztest.22
+sqrt(ztest.22$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion Women's Movement Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_WomenMovement_composite)
+ztest.12 <- prop.test(x = c(13, 7), n = c(77, 54), correct = TRUE)
+ztest.12
+sqrt(ztest.12$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion Women's Movement Recollection by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_WomenMovement_composite)
+ztest.23 <- prop.test(x = c(17, 3), n = c(83, 51), correct = TRUE)
+ztest.23
+sqrt(ztest.23$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion Misc Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$recall_Misc_binary)
+ztest.13 <- prop.test(x = c(20, 18), n = c(77, 54), correct = FALSE)
+ztest.13
+sqrt(ztest.13$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion Misc Recollection by gender
+```{r}
+table(FLSA_merge$sex, FLSA_merge$recall_Misc_binary)
+ztest.24 <- prop.test(x = c(24, 14), n = c(83, 51), correct = FALSE)
+ztest.24
+sqrt(ztest.24$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion general Social Movement Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$event_type_socialmovement_binary)
+ztest.14 <- prop.test(x = c(48, 35), n = c(77, 54), correct = FALSE)
+ztest.14
+sqrt(ztest.14$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion general Social Movement Recollection by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$event_type_socialmovement_binary)
+ztest.25 <- prop.test(x = c(53, 31), n = c(83, 51), correct = FALSE)
+ztest.25
+sqrt(ztest.25$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion general Electoral Politics Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$event_type_electoralpolitics_binary)
+ztest.15 <- prop.test(x = c(8, 19), n = c(77, 54), correct = TRUE)
+ztest.15
+sqrt(ztest.15$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion general Electoral Politics Recollection by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$event_type_electoralpolitics_binary)
+ztest.26 <- prop.test(x = c(20, 7), n = c(83, 51), correct = TRUE)
+ztest.26
+sqrt(ztest.26$statistic)
+```
+
+#### Two proportion Z Test for difference in proportion general Sociocultural Change Recollection by race.
+```{r}
+table(FLSA_merge$t1race, FLSA_merge$event_type_socioculturalchange_binary)
+ztest.16 <- prop.test(x = c(13, 11), n = c(77, 54), correct = FALSE)
+ztest.16
+sqrt(ztest.16$statistic)
+```
+
+
+#### Two proportion Z Test for difference in proportion general Sociocultural Change Recollection by gender.
+```{r}
+table(FLSA_merge$sex, FLSA_merge$event_type_socioculturalchange_binary)
+ztest.27 <- prop.test(x = c(16, 8), n = c(83, 51), correct = TRUE)
+ztest.27
+sqrt(ztest.27$statistic)
+```
+
+
+
+
+
+
+# Score standardedized behavioral variables
+
+### T1 Pol Engagement
+```{r}
+# T1 Pol Engagement
+FLSA_merge$t1sie01a.VoteNational <- as.numeric(revalue(FLSA_merge$t1sie01a, c("Always" = 5, "Usually" = 4, "Sometimes" = 3, "Rarely" = 2, "Never" = 1)))
+FLSA_merge$t1sie01b.VoteLocal <- as.numeric(revalue(FLSA_merge$t1sie01b, c("Always" = 5, "Usually" = 4, "Sometimes" = 3, "Rarely" = 3, "Never" = 1)))
+FLSA_merge$t1sie02.Campaign <- as.numeric(revalue(FLSA_merge$t1sie02, c("Always" = 5, "Usually" = 4, "Sometimes" = 3, "Rarely" = 2, "Never" = 1)))
+
+# Record the secondary political participation into binary
+# "Because the concern was political participation in general and not whether the participation was recent, the answers were recoded into two categories—whether participants had ever participated in a particular political action or not."
+FLSA_merge$t1sie03a_x <- as.numeric(revalue(FLSA_merge$t1sie03a, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03b_x <- as.numeric(revalue(FLSA_merge$t1sie03b, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03c_x <- as.numeric(revalue(FLSA_merge$t1sie03c, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03d_x <- as.numeric(revalue(FLSA_merge$t1sie03d, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03e_x <- as.numeric(revalue(FLSA_merge$t1sie03e, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03f_x <- as.numeric(revalue(FLSA_merge$t1sie03f, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03g_x <- as.numeric(revalue(FLSA_merge$t1sie03g, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03h_x <- as.numeric(revalue(FLSA_merge$t1sie03h, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03i_x <- as.numeric(revalue(FLSA_merge$t1sie03i, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03j_x <- as.numeric(revalue(FLSA_merge$t1sie03j, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+FLSA_merge$t1sie03k_x <- as.numeric(revalue(FLSA_merge$t1sie03k, c("No" = 0, "Yes, but not within the last 12 months" = 1, "Yes,  within the last 12 months" = 1)))
+
+# Create 0-11 sum index of secondary political participation
+t1sie03.Additive.Rows <- FLSA_merge %>% select(t1sie03a_x, t1sie03b_x, t1sie03c_x, t1sie03d_x, t1sie03e_x, t1sie03f_x, t1sie03g_x, t1sie03h_x, t1sie03i_x, t1sie03j_x, t1sie03k_x) 
+FLSA_merge$t1sie03.Additive <- apply(t1sie03.Additive.Rows, 1, function(x)
+                               ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE)))
+
+# See if these correlations replicate Jones & McAdams (2013) — they do!
+rcorr(cbind(FLSA_merge$t1sie01a.VoteNational, FLSA_merge$t1sie01b.VoteLocal, FLSA_merge$t1sie02.Campaign, FLSA_merge$t1sie03.Additive), type = "pearson")
+Jones2013 <- FLSA_merge %>% select(t1sie01a.VoteNational, t1sie01b.VoteLocal, t1sie02.Campaign, t1sie03.Additive)
+Jones2013Corr <- cor(Jones2013, use="pairwise.complete.obs")
+Jones2013Corr
+
+FLSA_merge$t1sie01a.VoteNational.z <- scale(FLSA_merge$t1sie01a.VoteNational)
+FLSA_merge$t1sie02.Campaign.z <- scale(FLSA_merge$t1sie02.Campaign)
+FLSA_merge$t1sie03.Additive.z <- scale(FLSA_merge$t1sie03.Additive)
+# ViewTest <- FLSA_merge %>% select(t1sie01a_xz, t1sie01a_x)
+
+# Average the z-scored items together with ScoreItems in psych
+t1.PolEngage.df <- data.frame(FLSA_merge$t1sie01a.VoteNational.z, FLSA_merge$t1sie02.Campaign.z, FLSA_merge$t1sie03.Additive.z)
+t1.PolEngage.keys.list <- list(PolEngage = c(1,2,3))
+t1.PolEngage.scores <- scoreItems(t1.PolEngage.keys.list, t1.PolEngage.df, impute = "none") 
+psych::describe(t1.PolEngage.scores$scores)
+t1.PolEngage.scores$alpha # 0.6397102
+t1.PolEngage.scores <- t1.PolEngage.scores$scores
+FLSA_merge$t1PolEngageComp <- t1.PolEngage.scores[,]
+
+# I can replicate the LGS descriptive stats by looking at the totals, but not for PolEnggage (instead of the averages)
+psych::describe(FLSA_merge$t1lgs_tot) # m = 43.16; sd = 8.88
+FLSA_merge$t1PolEngage.Tot <- (FLSA_merge$t1sie01a.VoteNational.z + FLSA_merge$t1sie02.Campaign.z + FLSA_merge$t1sie03.Additive.z)
+psych::describe(FLSA_merge$t1PolEngage.Tot) 
+
+# This gets identical results while also dropping two cases, not the ideal method. 
+# FLSA_merge$AddfirstTwo <- ((FLSA_merge$t1sie01a_xz + FLSA_merge$t1sie02_xz)/2)
+# AddThree <- ((FLSA_merge$AddfirstTwo + FLSA_merge$t1sie03.Additivez)/2)
+# FLSA_merge$AddThree <- AddThree[,]
+# psych::describe(FLSA_merge$AddThree)
+```
+
+### T5 Pol Engagement
+```{r}
+FLSA_merge$t5sie01.VoteNational <- as.numeric(revalue(FLSA_merge$t5sie01, c("Always" = 5, "Usually" = 4, "Sometimes" = 3, "Rarely" = 2, "Never" = 1)))
+FLSA_merge$t5sie02.Campaign <- as.numeric(revalue(FLSA_merge$t5sie02, c("Always" = 5, "Usually" = 4, "Sometimes" = 3, "Rarely" = 2, "Never" = 1)))
+
+# T5 sie 03
+FLSA_merge$t5sie03a_x <- as.numeric(revalue(FLSA_merge$t5sie03a, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03b_x <- as.numeric(revalue(FLSA_merge$t5sie03b, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03c_x <- as.numeric(revalue(FLSA_merge$t5sie03c, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03d_x <- as.numeric(revalue(FLSA_merge$t5sie03d, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03e_x <- as.numeric(revalue(FLSA_merge$t5sie03e, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03f_x <- as.numeric(revalue(FLSA_merge$t5sie03f, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03g_x <- as.numeric(revalue(FLSA_merge$t5sie03g, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03h_x <- as.numeric(revalue(FLSA_merge$t5sie03h, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03i_x <- as.numeric(revalue(FLSA_merge$t5sie03i, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03j_x <- as.numeric(revalue(FLSA_merge$t5sie03j, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+FLSA_merge$t5sie03k_x <- as.numeric(revalue(FLSA_merge$t5sie03k, c("no" = 0, "yes but not within the last 12 months" = 1, "yes, within the last 12 months" = 2)))
+
+t5sie10.Additive.Rows <- FLSA_merge %>% select(t5sie03a_x, t5sie03b_x, t5sie03c_x, t5sie03d_x, t5sie03e_x, t5sie03f_x, t5sie03g_x, t5sie03h_x, t5sie03i_x, t5sie03j_x, t5sie03k_x) 
+FLSA_merge$t5sie10.Additive <- apply(t5sie10.Additive.Rows, 1, function(x)
+                               ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE)))
+
+# See if these correlations replicate Jones & McAdams (2013) — they do!
+rcorr(cbind(FLSA_merge$t5sie01.VoteNational, FLSA_merge$t5sie02.Campaign, FLSA_merge$t5sie10.Additive), type = "pearson")
+
+FLSA_merge$t5sie01.VoteNational.z <- scale(FLSA_merge$t5sie01.VoteNational)
+FLSA_merge$t5sie02.Campaign.z <- scale(FLSA_merge$t5sie02.Campaign)
+FLSA_merge$t5sie10.Additive.z <- scale(FLSA_merge$t5sie10.Additive)
+
+# Average the z-scored items together with ScoreItems in psych
+t5.PolEngage.df <- data.frame(FLSA_merge$t5sie01.VoteNational.z, FLSA_merge$t5sie02.Campaign.z, FLSA_merge$t5sie10.Additive.z)
+t5.PolEngage.keys.list <- list(PolEngage = c(1,2,3))
+t5.PolEngage.scores <- scoreItems(t5.PolEngage.keys.list, t5.PolEngage.df, impute = "none") 
+psych::describe(t5.PolEngage.scores$scores)
+t5.PolEngage.scores$alpha # 0.6931183
+t5.PolEngage.scores <- t5.PolEngage.scores$scores
+FLSA_merge$t5.PolEngage.Comp <- t5.PolEngage.scores[,]
+```
+
+### T1 Civic Engagement
+
+```{r}
+#T1 Civic Replication 
+## The first two Variables
+# Note: if you switch "No" to 1 and the Yeses to 0, all of the civic engagement variables are positively intercorrelated in the expected direction, which leads me to believe that this is a reserve scoring error in the original data. 
+FLSA_merge$t1sie08_x <- as.numeric(revalue(FLSA_merge$t1sie08, c("No" = 0, "Yes, but not in the last 12 months" = 1, "Yes, in the last 12 months" = 1))) 
+FLSA_merge$t1sie09_x <- as.numeric(revalue(FLSA_merge$t1sie09, c("No" = 0, "Yes, but not in the last 12 months" = 1, "Yes, in the last 12 months" = 1)))
+rcorr(FLSA_merge$t1sie09_x, FLSA_merge$t1sie08_x) # correlation does not make Jones 2013
+
+table(FLSA_merge$t1sie08_x)
+table(FLSA_merge$t1sie09_x)
+
+## The org behavior variables
+
+FLSA_merge$t1sie10a_x <- as.numeric(revalue(FLSA_merge$t1sie10a, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10b_x <- as.numeric(revalue(FLSA_merge$t1sie10b, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10c_x <- as.numeric(revalue(FLSA_merge$t1sie10c, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10d_x <- as.numeric(revalue(FLSA_merge$t1sie10d, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10e_x <- as.numeric(revalue(FLSA_merge$t1sie10e, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10f_x <- as.numeric(revalue(FLSA_merge$t1sie10f, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10g_x <- as.numeric(revalue(FLSA_merge$t1sie10g, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10h_x <- as.numeric(revalue(FLSA_merge$t1sie10h, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+FLSA_merge$t1sie10i_x <- as.numeric(revalue(FLSA_merge$t1sie10i, c("No involvement" = 0, "Yes, volunteered but not in the last 12 months" = 1, "Yes, I have volunteered for this organization in the last 12" = 1)))
+
+table(FLSA_merge$t1sie10a_x)
+table(FLSA_merge$t1sie10b_x)
+table(FLSA_merge$t1sie10c_x)
+table(FLSA_merge$t1sie10d_x)
+table(FLSA_merge$t1sie10e_x)
+table(FLSA_merge$t1sie10f_x)
+table(FLSA_merge$t1sie10g_x)
+table(FLSA_merge$t1sie10h_x)
+table(FLSA_merge$t1sie10i_x)
+
+t1sie10.Additive.Rows <- FLSA_merge %>% select(t1sie10a_x, t1sie10b_x, t1sie10c_x, t1sie10d_x, t1sie10e_x, t1sie10f_x, t1sie10g_x, t1sie10h_x, t1sie10i_x) 
+FLSA_merge$t1sie10.Additive <- apply(t1sie10.Additive.Rows, 1, function(x)
+                               ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE)))
+
+
+# See if these correlations replicate Jones & McAdams (2013): Why are they negative??
+rcorr(cbind(FLSA_merge$t1sie08_x, FLSA_merge$t1sie09_x, FLSA_merge$t1sie10.Additive, FLSA_merge$t1sie10a_x, FLSA_merge$t1sie10b_x, FLSA_merge$t1sie10c_x, FLSA_merge$t1sie10d_x, FLSA_merge$t1sie10e_x, FLSA_merge$t1sie10f_x, FLSA_merge$t1sie10g_x, FLSA_merge$t1sie10h_x, FLSA_merge$t1sie10i_x))
+
+# Sign flips depending on how you code the t1sie08 and t1sie09
+rcorr(cbind(FLSA_merge$t1sie08_x, 
+            FLSA_merge$t1sie09_x, 
+            FLSA_merge$t1sie10.Additive, 
+            FLSA_merge$t1sie10a_x, 
+            FLSA_merge$t1sie10b_x, 
+            FLSA_merge$t1sie10c_x, 
+            FLSA_merge$t1sie10d_x, 
+            FLSA_merge$t1sie10e_x, 
+            FLSA_merge$t1sie10f_x, 
+            FLSA_merge$t1sie10g_x, 
+            FLSA_merge$t1sie10h_x, 
+            FLSA_merge$t1sie10i_x,
+            FLSA_merge$t5sie08_x, 
+            FLSA_merge$t5sie09_x, 
+            FLSA_merge$t5sie10a_x, 
+            FLSA_merge$t5sie10b_x, 
+            FLSA_merge$t5sie10c_x, 
+            FLSA_merge$t5sie10d_x, 
+            FLSA_merge$t5sie10e_x, 
+            FLSA_merge$t5sie10f_x, 
+            FLSA_merge$t5sie10g_x, 
+            FLSA_merge$t5sie10h_x, 
+            FLSA_merge$t5sie10.Additive))
+
+# scatterHist(FLSA_merge$t1sie08_x, FLSA_merge$t1sie10.Additive)
+# scatterHist(FLSA_merge$t1sie08_x, FLSA_merge$t1lgs_m) # this was almost certainly a re-coding error at some point 
+
+FLSA_merge$t1sie08.SolveProblem.z <- scale(FLSA_merge$t1sie08_x)
+FLSA_merge$t1sie09.RaiseMoney.z <- scale(FLSA_merge$t1sie08_x)
+FLSA_merge$t1sie10.Additive.z <- scale(FLSA_merge$t1sie10.Additive)
+# ViewTest <- FLSA_merge %>% select(t5sie10.Additivez, t5sie10.Additive)
+
+# Average the z-scored items together with ScoreItems in psych
+CivEngage.t1.df <- data.frame(FLSA_merge$t1sie08.SolveProblem.z, FLSA_merge$t1sie09.RaiseMoney.z, FLSA_merge$t1sie10.Additive.z)
+CivEngage.t1.keys.list <- list(CivEngage = c(1,2,3))
+CivEngage.t1.scores <- scoreItems(CivEngage.t1.keys.list, CivEngage.t1.df, impute = "none") 
+psych::describe(CivEngage.t1.scores$scores)
+CivEngage.t1.scores$alpha # the alpha should not be this low — there is almost certainly an error with the text data. # Alpha is 0.8165018 vs. 0.1799826 when you reverse score the items...
+CivEngage.t1.scores <- CivEngage.t1.scores$scores
+FLSA_merge$t1.CivEngage.Comp <- CivEngage.t1.scores[,]
+```
+
+
+### T5 Civic Engagement 
+```{r}
+FLSA_merge$t5sie08_x <- as.numeric(revalue(FLSA_merge$t5sie08, c("no" = 0, "yes, but not in last 12 months" = 1, "yes, in last 12 months" = 2)))
+FLSA_merge$t5sie09_x <- as.numeric(revalue(FLSA_merge$t5sie09, c("no" = 0, "yes, but not in last 12 months" = 1, "yes, in last 12 months" = 2)))
+## The org behavior variables
+FLSA_merge$t5sie10a_x <- as.numeric(revalue(FLSA_merge$t5sie10a, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10b_x <- as.numeric(revalue(FLSA_merge$t5sie10b, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10c_x <- as.numeric(revalue(FLSA_merge$t5sie10c, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10d_x <- as.numeric(revalue(FLSA_merge$t5sie10d, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10e_x <- as.numeric(revalue(FLSA_merge$t5sie10e, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10f_x <- as.numeric(revalue(FLSA_merge$t5sie10f, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10g_x <- as.numeric(revalue(FLSA_merge$t5sie10g, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+FLSA_merge$t5sie10h_x <- as.numeric(revalue(FLSA_merge$t5sie10h, c("no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2))) 
+# what is up with the "3"s and extra NAs in the t5sie10i_x col? 
+FLSA_merge$t5sie10i_x <- as.numeric(revalue(FLSA_merge$t5sie10i, c("3" = 0, "no involvement" = 0, "yes, volunteered but not in the last 12 months" = 1, "yes, I have volunteered in the last 12 months" = 2)))
+
+
+t5sie10.Additive.Rows <- FLSA_merge %>% select(t5sie10a_x, t5sie10b_x, t5sie10c_x, t5sie10d_x, t5sie10e_x, t5sie10f_x, t5sie10g_x, t5sie10h_x, t5sie10i_x) 
+FLSA_merge$t5sie10.Additive <- apply(t5sie10.Additive.Rows, 1, function(x)
+                               ifelse(all(is.na(x)), NA, sum(x, na.rm = TRUE)))
+# https://stackoverflow.com/questions/47098874/sum-two-columns-in-a-new-columns-in-r-only-if-one-na
+  
+rcorr(cbind(FLSA_merge$t5sie08_x, FLSA_merge$t5sie09_x, FLSA_merge$t5sie10.Additive))
+
+FLSA_merge$t5sie08.SolveProblem.z <- scale(FLSA_merge$t5sie08_x)
+FLSA_merge$t5sie09.RaiseMoney.z <- scale(FLSA_merge$t5sie09_x)
+FLSA_merge$t5sie10.Additive.z <- scale(FLSA_merge$t5sie10.Additive)
+# ViewTest <- FLSA_merge %>% select(t5sie10.Additivez, t5sie10.Additive)
+
+# Average the z-scored items together with ScoreItems in psych
+CivEngage.t5.df <- data.frame(FLSA_merge$t5sie08.SolveProblem.z, FLSA_merge$t5sie09.RaiseMoney.z, FLSA_merge$t5sie10.Additive.z)
+CivEngage.t5.keys.list <- list(CivEngage = c(1,2,3))
+CivEngage.t5.scores <- scoreItems(CivEngage.t5.keys.list, CivEngage.t5.df, impute = "none") # you get a warning
+psych::describe(CivEngage.t5.scores$scores)
+CivEngage.t5.scores$alpha # 0.5973426
+CivEngage.t5.scores <- CivEngage.t5.scores$scores
+FLSA_merge$t5.CivEngage.Comp <- CivEngage.t5.scores[,]
+```
+
+### Political Orientation Ts 1, 5, & 9
+```{r}   
+FLSA_merge$t1sie07x <- as.numeric(plyr::revalue(FLSA_merge$t1sie07, c("Very conservative" = 7, "Conservative" = 6, "Somewhat conservative" = 5, "Middle of the road (neither conservative nor liberal)" = 4, "Somewhat liberal" = 3, "Liberal" = 2, "Very liberal" = 1)))
+
+FLSA_merge$t5sie07x <- as.numeric(plyr::revalue(FLSA_merge$t5sie07, c("very conservative" = 7, "conservative" = 6, "somewhat conservative" = 5, "middle of the road" = 4, "somewhat liberal" = 3, "liberal" = 2, "very liberal" = 1)))
+
+FLSA_merge$t9sie07x <- as.numeric(plyr::revalue(FLSA_merge$t9sie07, c("Very conservative" = 7, "Conservative" = 6, "Somewhat Conservative" = 5, "Middle of the road (neither conservative nor liberal)" = 4, "Somewhat liberal" = 3, "Liberal" = 2, "Very liberal" = 1)))
+
+describe(FLSA_merge$t1sie07x)
+describe(FLSA_merge$t5sie07x)
+describe(FLSA_merge$t9sie07x)
+
+# PolOr <- FLSA_merge %>% select(t1sie07x, t5sie07x, t9sie07x)
+# PolOrCorr <- cor(PolOr, use="pairwise.complete.obs")
+# PolOrCorr
+
+# p1 <- ggplot(FLSA_merge, aes(x=t1sie07x))+geom_histogram()+labs(title="Pol Orientation t1") + geom_vline(xintercept=mean(FLSA_merge$t1sie07x, na.rm = TRUE), color="red")
+# p2 <- ggplot(FLSA_merge, aes(x=t5sie07x))+geom_histogram()+labs(title="Pol Orientation t5") + geom_vline(xintercept=mean(FLSA_merge$t5sie07x, na.rm = TRUE), color="red")
+# p3 <- ggplot(FLSA_merge, aes(x=t9sie07x))+geom_histogram()+labs(title="Pol Orientation t9") + geom_vline(xintercept=mean(FLSA_merge$t9sie07x, na.rm = TRUE), color="red")
+# grid.arrange(p1, p2, p3, nrow = 2)
+```
+
+
+### SDO at T2, T8, composite
+```{r}  
+
+# SDO at T2
+FLSA_merge$t2sdo01x <- as.numeric(revalue(FLSA_merge$t2sdo01, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo02x <- as.numeric(revalue(FLSA_merge$t2sdo02, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo03x <- as.numeric(revalue(FLSA_merge$t2sdo03, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo04x <- as.numeric(revalue(FLSA_merge$t2sdo04, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo05x <- as.numeric(revalue(FLSA_merge$t2sdo05, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo06x <- as.numeric(revalue(FLSA_merge$t2sdo06, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo07x <- as.numeric(revalue(FLSA_merge$t2sdo07, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+FLSA_merge$t2sdo08x <- as.numeric(revalue(FLSA_merge$t2sdo08, c("Very Negative" = 1, "Negative" = 2, "Slightly Negative" = 3, "Neither Positive or Negative" = 4, "Slightly Positive" = 5, "Positive" = 6, "Very Positive" = 7)))
+
+# SDO at T8
+FLSA_merge$t8sdo01x <- as.numeric(revalue(FLSA_merge$t8sdo01, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo02x <- as.numeric(revalue(FLSA_merge$t8sdo02, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo03x <- as.numeric(revalue(FLSA_merge$t8sdo03, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo04x <- as.numeric(revalue(FLSA_merge$t8sdo04, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo05x <- as.numeric(revalue(FLSA_merge$t8sdo05, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo06x <- as.numeric(revalue(FLSA_merge$t8sdo06, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo07x <- as.numeric(revalue(FLSA_merge$t8sdo07, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+FLSA_merge$t8sdo08x <- as.numeric(revalue(FLSA_merge$t8sdo08, c("very negative" = 1, "negative" = 2, "slightly negative" = 3, "neither positive or negative" = 4, "slightly positive" = 5, "positive" = 6, "very positive" = 7)))
+
+#create dataframe of T2 SDO
+t2sdo.composite.df <- data.frame(FLSA_merge$t2sdo01x, FLSA_merge$t2sdo02x, FLSA_merge$t2sdo03x, FLSA_merge$t2sdo04x, FLSA_merge$t2sdo05x, FLSA_merge$t2sdo06x, FLSA_merge$t2sdo07x, FLSA_merge$t2sdo08x, FLSA_merge$t2sdo09_r, FLSA_merge$t2sdo10_r, FLSA_merge$t2sdo11_r, FLSA_merge$t2sdo12_r, FLSA_merge$t2sdo13_r, FLSA_merge$t2sdo14_r, FLSA_merge$t2sdo15_r, FLSA_merge$t2sdo16_r)
+
+#create dataframe of T8 SDO 
+t8sdo.composite.df <- data.frame(FLSA_merge$t8sdo01x, FLSA_merge$t8sdo02x, FLSA_merge$t8sdo03x, FLSA_merge$t8sdo04x, FLSA_merge$t8sdo05x, FLSA_merge$t8sdo06x, FLSA_merge$t8sdo07x, FLSA_merge$t8sdo08x, FLSA_merge$t8sdo09_r, FLSA_merge$t8sdo10_r, FLSA_merge$t8sdo11_r, FLSA_merge$t8sdo12_r, FLSA_merge$t8sdo13_r, FLSA_merge$t8sdo14_r, FLSA_merge$t8sdo15_r, FLSA_merge$t8sdo16_r)
+
+sdot2.test.df <- FLSA_merge %>% select(t2sdo01, t2sdo02, t2sdo03, t2sdo04, t2sdo05, t2sdo06, t2sdo07, t2sdo08, t2sdo09, t2sdo10, t2sdo11, t2sdo12, t2sdo13, t2sdo14, t2sdo15, t2sdo16, t2sdo09_r, t2sdo10_r, t2sdo11_r, t2sdo12_r, t2sdo13_r, t2sdo14_r, t2sdo15_r, t2sdo16_r)
+
+t2.sdo.keys.list <- list(t2sdo.composite.df = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16))
+t8.sdo.keys.list <- list(t8sdo.composite.df = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16))
+
+t2.sdo.scores <- scoreItems(t2.sdo.keys.list, t2sdo.composite.df, impute = "none", min = 1, max = 7)
+t8.sdo.scores <- scoreItems(t8.sdo.keys.list, t8sdo.composite.df, impute = "none", min = 1, max = 7) 
+describe(t2.sdo.scores$scores) 
+describe(t8.sdo.scores$scores)
+t2.sdo.scores$scores[t2.sdo.scores$missing > 0 ] <- NA
+t8.sdo.scores$scores[t8.sdo.scores$missing > 0 ] <- NA
+describe(t2.sdo.scores$scores)
+describe(t8.sdo.scores$scores)
+t2.sdo.scores$alpha
+t8.sdo.scores$alpha
+t2.sdo.scores <- t2.sdo.scores$scores
+t8.sdo.scores <- t8.sdo.scores$scores
+FLSA_merge$t2.sdo.composite <- t2.sdo.scores[,]
+FLSA_merge$t8.sdo.composite <- t8.sdo.scores[,]
+
+cor.test(FLSA_merge$t2.sdo.composite, FLSA_merge$t8.sdo.composite)
+
+## Make composite composite 
+tcomp.sdo.df <- data.frame(FLSA_merge$t2.sdo.composite, FLSA_merge$t8.sdo.composite)
+tcomp.sdo.keys.list <- list(tcomp.sdo.df = c(1,2))
+tcomp.sdo.scores <- scoreItems(tcomp.sdo.keys.list, tcomp.sdo.df, impute = FALSE, min = 1, max = 7)
+tcomp.sdo.scores$scores[tcomp.sdo.scores$missing > 0] <- NA
+# psych::describe(tcomp.sdo.scores)
+tcomp.sdo.scores <- tcomp.sdo.scores$scores
+FLSA_merge$tcomp.sdo.composite <- tcomp.sdo.scores[,]
+```
+
+
+### RWA at T2 and T8, + composite
+```{r}   
+# RWA at T2
+FLSA_merge$t2rwa01x <- as.numeric(revalue(FLSA_merge$t2rwa01, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa03x <- as.numeric(revalue(FLSA_merge$t2rwa03, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa05x <- as.numeric(revalue(FLSA_merge$t2rwa05, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa06x <- as.numeric(revalue(FLSA_merge$t2rwa06, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa09x <- as.numeric(revalue(FLSA_merge$t2rwa09, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa12x <- as.numeric(revalue(FLSA_merge$t2rwa12, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa14x <- as.numeric(revalue(FLSA_merge$t2rwa14, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa16x <- as.numeric(revalue(FLSA_merge$t2rwa16, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa17x <- as.numeric(revalue(FLSA_merge$t2rwa17, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa19x <- as.numeric(revalue(FLSA_merge$t2rwa19, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa22x <- as.numeric(revalue(FLSA_merge$t2rwa22, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa23x <- as.numeric(revalue(FLSA_merge$t2rwa23, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa26x <- as.numeric(revalue(FLSA_merge$t2rwa26, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa28x <- as.numeric(revalue(FLSA_merge$t2rwa28, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+FLSA_merge$t2rwa30x <- as.numeric(revalue(FLSA_merge$t2rwa30, c("Very Strongly Disagree" = 1, "Strongly Disagree" = 2, "Disagree" = 3, "Slightly Disagree" = 4, "Neutral" = 5, "Slightly Agree" = 6, "Agree" = 7, "Strongly Agree" = 8, "Very Strongly Agree" = 9)))
+
+# RWA at T8
+FLSA_merge$t8rwa01x <- as.numeric(revalue(FLSA_merge$t8rwa01, c("very strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa03x <- as.numeric(revalue(FLSA_merge$t8rwa03, c("very strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa05x <- as.numeric(revalue(FLSA_merge$t8rwa05, c("very strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa06x <- as.numeric(revalue(FLSA_merge$t8rwa06, c("very strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa09x <- as.numeric(revalue(FLSA_merge$t8rwa09, c("very strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa12x <- as.numeric(revalue(FLSA_merge$t8rwa12, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa14x <- as.numeric(revalue(FLSA_merge$t8rwa14, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa16x <- as.numeric(revalue(FLSA_merge$t8rwa16, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa17x <- as.numeric(revalue(FLSA_merge$t8rwa17, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa19x <- as.numeric(revalue(FLSA_merge$t8rwa19, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa22x <- as.numeric(revalue(FLSA_merge$t8rwa22, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa23x <- as.numeric(revalue(FLSA_merge$t8rwa23, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa26x <- as.numeric(revalue(FLSA_merge$t8rwa26, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa28x <- as.numeric(revalue(FLSA_merge$t8rwa28, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa30x <- as.numeric(revalue(FLSA_merge$t8rwa30, c("very Strongly disagree" = 1, "strongly disagree" = 2, "disagree" = 3, "slightly disagree" = 4, "neutral" = 5, "slightly agree" = 6, "agree" = 7, "strongly agree" = 8, "very strongly agree" = 9)))
+FLSA_merge$t8rwa08_r <-as.numeric(revalue(FLSA_merge$t8rwa08, c("very strongly disagree" = 9, "strongly disagree" = 8, "disagree" = 7, "slightly disagree" = 6, "neutral" = 5, "slightly agree" = 4, "agree" = 3, "strongly agree" = 2, "very strongly agree" = 1)))
+
+#create dataframe of rwa T2 variables
+t2rwa_composite.df <- data.frame(FLSA_merge$t2rwa01x, FLSA_merge$t2rwa02_r, FLSA_merge$t2rwa03x, FLSA_merge$t2rwa04_r, FLSA_merge$t2rwa05x, FLSA_merge$t2rwa06x, FLSA_merge$t2rwa07_r, FLSA_merge$t2rwa08_r, FLSA_merge$t2rwa09x, FLSA_merge$t2rwa10_r, FLSA_merge$t2rwa11_r, FLSA_merge$t2rwa12x, FLSA_merge$t2rwa13_r, FLSA_merge$t2rwa14x, FLSA_merge$t2rwa15_r, FLSA_merge$t2rwa16x, FLSA_merge$t2rwa17x, FLSA_merge$t2rwa18_r, FLSA_merge$t2rwa19x, FLSA_merge$t2rwa20_r, FLSA_merge$t2rwa21_r, FLSA_merge$t2rwa22x, FLSA_merge$t2rwa23x, FLSA_merge$t2rwa24_r, FLSA_merge$t2rwa25_r, FLSA_merge$t2rwa26x, FLSA_merge$t2rwa27_r, FLSA_merge$t2rwa28x, FLSA_merge$t2rwa29_r, FLSA_merge$t2rwa30x)
+t2rwa_composite.df <- t2rwa_composite.df %>% mutate_if(is.character, as.numeric)
+
+#create dataframe of rwa T8 variables
+t8rwa_composite.df <- data.frame(FLSA_merge$t8rwa01x, FLSA_merge$t8rwa02_r, FLSA_merge$t8rwa03x, FLSA_merge$t8rwa04_r, FLSA_merge$t8rwa05x, FLSA_merge$t8rwa06x, FLSA_merge$t8rwa07_r, FLSA_merge$t8rwa08_r, FLSA_merge$t8rwa09x, FLSA_merge$t8rwa10_r, FLSA_merge$t8rwa11_r, FLSA_merge$t8rwa12x, FLSA_merge$t8rwa13_r, FLSA_merge$t8rwa14x, FLSA_merge$t8rwa15_r, FLSA_merge$t8rwa16x, FLSA_merge$t8rwa17x, FLSA_merge$t8rwa18_r, FLSA_merge$t8rwa19x, FLSA_merge$t8rwa20_r, FLSA_merge$t8rwa21_r, FLSA_merge$t8rwa22x, FLSA_merge$t8rwa23x, FLSA_merge$t8rwa24_r, FLSA_merge$t8rwa25_r, FLSA_merge$t8rwa26x, FLSA_merge$t8rwa27_r, FLSA_merge$t8rwa28x, FLSA_merge$t8rwa29_r, FLSA_merge$t8rwa30x)
+t8rwa_composite.df <- t8rwa_composite.df %>% mutate_if(is.character, as.numeric)
+
+
+#create list of key with recoding. In this case all of the varaibles have already been recoded.
+t2rwa_composite.keys <- list(t2rwa_composite.df=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30))
+t8rwa_composite.keys <- list(t8rwa_composite.df=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30))
+
+#score the scale
+t2rwa_composite.scale <- scoreItems(t2rwa_composite.keys, t2rwa_composite.df, impute = "none", min = 1, max = 9)
+t8rwa_composite.scale <- scoreItems(t8rwa_composite.keys, t8rwa_composite.df, impute = "none", min = 1, max = 9)
+
+#summarize
+psych::describe(t2rwa_composite.scale$scores)
+t2rwa_composite.scale$alpha
+psych::describe(t8rwa_composite.scale$scores)
+t8rwa_composite.scale$alpha
+
+# Filter out Missing
+t2rwa_composite.scale$scores[t2rwa_composite.scale$missing > 0] <- NA
+psych::describe(t2rwa_composite.scale$scores)
+t8rwa_composite.scale$scores[t8rwa_composite.scale$missing > 0] <- NA
+psych::describe(t8rwa_composite.scale$scores)
+
+#save the scores
+t2rwa_composite_scores <- t2rwa_composite.scale$scores
+t8rwa_composite_scores <- t8rwa_composite.scale$scores
+
+#attatch new variable to dataset
+FLSA_merge$t2rwa_composite <- t2rwa_composite_scores[,]
+FLSA_merge$t8rwa_composite <- t8rwa_composite_scores[,]
+
+cor.test(FLSA_merge$t2rwa_composite, FLSA_merge$t8rwa_composite)
+
+# making the composite measure of T2 and T8
+t2and8_rwa_composite <- data.frame(FLSA_merge$t2rwa_composite, FLSA_merge$t8rwa_composite)
+t2and8_rwa_composite.keys <- list(t2and8_rwa_composite = c(1,2))
+t2and8_rwa_composite.scale <- scoreItems(t2and8_rwa_composite.keys, t2and8_rwa_composite, impute = FALSE, min = 1, max = 9)
+# psych::describe(t2and8_rwa_composite.scale)
+t2and8_rwa_composite.scale$alpha
+t2and8_rwa_composite.scale$scores[t2and8_rwa_composite.scale$missing > 0] <- NA
+t2and8_rwa_composite.scale <- t2and8_rwa_composite.scale$scores
+FLSA_merge$t2and8_rwa_composite <- t2and8_rwa_composite.scale[,]
+
+``` 
+
+
+### Moral Foundations at T5
+
+```{r}   
+# Harm Part 1 Recode
+FLSA_merge$t5mfq01_h <- as.numeric(revalue(FLSA_merge$t5mfq01, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq07_h <- as.numeric(revalue(FLSA_merge$t5mfq07, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq12_h <- as.numeric(revalue(FLSA_merge$t5mfq12, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+# Harm Part 2 Recode
+FLSA_merge$t5mfq17_h <- as.numeric(revalue(FLSA_merge$t5mfq17, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq23_h <- as.numeric(revalue(FLSA_merge$t5mfq23, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq28_h <- as.numeric(revalue(FLSA_merge$t5mfq28, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+
+
+t5.mfq.harm.df <- data.frame(FLSA_merge$t5mfq01_h, FLSA_merge$t5mfq07_h, FLSA_merge$t5mfq12_h, FLSA_merge$t5mfq17_h, FLSA_merge$t5mfq23_h, FLSA_merge$t5mfq28_h)
+
+t5.mfq.harm.keys.list <- list(t5.mfq.harm = c(1,2,3,4,5,6))
+
+t5.mfq.harm.scores <- scoreItems(t5.mfq.harm.keys.list, t5.mfq.harm.df, impute = "none", min = 0, max = 5)
+describe(t5.mfq.harm.scores$scores)
+t5.mfq.harm.scores$alpha
+t5.mfq.harm.scores$scores[t5.mfq.harm.scores$missing > 0] <- NA
+describe(t5.mfq.harm.scores$scores)
+t5.mfq.harm.scores <- t5.mfq.harm.scores$scores
+FLSA_merge$t5.mfq.harm.scores_comp <- t5.mfq.harm.scores[,]
+
+# Fairness Part 1 Recode
+FLSA_merge$t5mfq02_f <- as.numeric(revalue(FLSA_merge$t5mfq02, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq08_f <- as.numeric(revalue(FLSA_merge$t5mfq08, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq13_f <- as.numeric(revalue(FLSA_merge$t5mfq13, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+# Fairness Part 2 Recode
+FLSA_merge$t5mfq18_f <- as.numeric(revalue(FLSA_merge$t5mfq18, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq24_f <- as.numeric(revalue(FLSA_merge$t5mfq24, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq29_f <- as.numeric(revalue(FLSA_merge$t5mfq29, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+
+t5.mfq.fair.df <- data.frame(FLSA_merge$t5mfq02_f, FLSA_merge$t5mfq08_f, FLSA_merge$t5mfq13_f, FLSA_merge$t5mfq18_f, FLSA_merge$t5mfq24_f, FLSA_merge$t5mfq29_f)
+
+t5.mfq.fair.keys.list <- list(t5.mfq.fair = c(1,2,3,4,5,6))
+
+t5.mfq.fair.scores <- scoreItems(t5.mfq.fair.keys.list, t5.mfq.fair.df, impute = "none", min = 0, max = 5)
+summary(t5.mfq.fair.scores)
+describe(t5.mfq.fair.scores$scores)
+t5.mfq.fair.scores$scores[t5.mfq.fair.scores$missing > 0] <- NA
+describe(t5.mfq.fair.scores$scores)
+t5.mfq.fair.scores <- t5.mfq.fair.scores$scores
+FLSA_merge$t5.mfq.fair.scores_comp <- t5.mfq.fair.scores[,]
+
+# Create Individualizing Composite
+t5.mfq.ind.df <- data.frame(FLSA_merge$t5.mfq.harm.scores_comp, FLSA_merge$t5.mfq.fair.scores_comp)
+t5.mfq.ind.keys.list <- list(t5.mfq.ind = c(1,2))
+t5.mfq.ind.scores <- scoreItems(t5.mfq.ind.keys.list, t5.mfq.ind.df, impute = FALSE, min = 0, max = 5)
+summary(t5.mfq.ind.scores)
+describe(t5.mfq.ind.scores$scores)
+t5.mfq.ind.scores$scores[t5.mfq.ind.scores$missing > 0] <- NA
+describe(t5.mfq.ind.scores$scores)
+t5.mfq.ind.scores <- t5.mfq.ind.scores$scores
+FLSA_merge$t5.mfq.ind.scores_comp <- t5.mfq.ind.scores[,]
+
+
+# Ingroup Part 1 Recode
+FLSA_merge$t5mfq03_i <- as.numeric(revalue(FLSA_merge$t5mfq03, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq09_i <- as.numeric(revalue(FLSA_merge$t5mfq09, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq14_i <- as.numeric(revalue(FLSA_merge$t5mfq14, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+# Ingroup Part 2 Recode
+FLSA_merge$t5mfq19_i <- as.numeric(revalue(FLSA_merge$t5mfq19, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq25_i <- as.numeric(revalue(FLSA_merge$t5mfq25, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq30_i <- as.numeric(revalue(FLSA_merge$t5mfq30, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+
+t5.mfq.ingroup.df <- data.frame(FLSA_merge$t5mfq03_i, FLSA_merge$t5mfq09_i, FLSA_merge$t5mfq14_i, FLSA_merge$t5mfq19_i, FLSA_merge$t5mfq25_i, FLSA_merge$t5mfq30_i)
+
+t5.mfq.ingroup.keys.list <- list(t5.mfq.ingroup = c(1,2,3,4,5,6))
+
+t5.mfq.ingroup.scores <- scoreItems(t5.mfq.ingroup.keys.list, t5.mfq.ingroup.df, impute = FALSE, min = 0, max = 5)
+summary(t5.mfq.ingroup.scores)
+describe(t5.mfq.ingroup.scores$scores)
+t5.mfq.ingroup.scores$scores[t5.mfq.ingroup.scores$missing > 0] <- NA
+describe(t5.mfq.ingroup.scores$scores)
+t5.mfq.ingroup.scores <- t5.mfq.ingroup.scores$scores
+FLSA_merge$t5.mfq.ingroup_comp <- t5.mfq.ingroup.scores[,]
+
+
+# Authority Part 1 Recode
+FLSA_merge$t5mfq04_a <- as.numeric(revalue(FLSA_merge$t5mfq04, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq10_a <- as.numeric(revalue(FLSA_merge$t5mfq10, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq15_a <- as.numeric(revalue(FLSA_merge$t5mfq15, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+# Authority Part 2 Recode
+FLSA_merge$t5mfq20_a <- as.numeric(revalue(FLSA_merge$t5mfq20, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq26_a <- as.numeric(revalue(FLSA_merge$t5mfq26, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq31_a <- as.numeric(revalue(FLSA_merge$t5mfq31, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+
+t5.mfq.authority.df <- data.frame(FLSA_merge$t5mfq04_a, FLSA_merge$t5mfq10_a, FLSA_merge$t5mfq15_a, FLSA_merge$t5mfq20_a, FLSA_merge$t5mfq26_a, FLSA_merge$t5mfq31_a)
+  
+t5.mfq.authority.keys.list <- list(t5.mfq.authority = c(1,2,3,4,5,6))
+
+t5.mfq.authority.scores <- scoreItems(t5.mfq.authority.keys.list, t5.mfq.authority.df, impute = FALSE, min = 0, max = 5)
+summary(t5.mfq.authority.scores)
+describe(t5.mfq.authority.scores$scores)
+t5.mfq.authority.scores$scores[t5.mfq.authority.scores$missing > 0] <- NA
+describe(t5.mfq.authority.scores$scores)
+t5.mfq.authority.scores <- t5.mfq.authority.scores$scores
+FLSA_merge$t5.mfq.authority_comp <- t5.mfq.authority.scores[,]
+
+
+# Purity Part 1 Recode
+FLSA_merge$t5mfq05_p <- as.numeric(revalue(FLSA_merge$t5mfq05, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq11_p <- as.numeric(revalue(FLSA_merge$t5mfq11, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+FLSA_merge$t5mfq16_p <- as.numeric(revalue(FLSA_merge$t5mfq16, c("not at all relevant" = 0, "not very relevant" = 1, "slightly relevant" = 2, "somewhat relevant" = 3, "very relevant" = 4, "extremely relevant" = 5)))
+# Purity Part 2 Recode)
+FLSA_merge$t5mfq21_p <- as.numeric(revalue(FLSA_merge$t5mfq21, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq27_p <- as.numeric(revalue(FLSA_merge$t5mfq27, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+FLSA_merge$t5mfq32_p <- as.numeric(revalue(FLSA_merge$t5mfq32, c("Strongly disagree" = 0, "Moderately disagree" = 1, "Slightly disagree" = 2, "Slightly agree" = 3, "Moderately agree" = 4, "Strongly agree" = 5)))
+
+t5.mfq.purity.df <- data.frame(FLSA_merge$t5mfq05_p, FLSA_merge$t5mfq11_p, FLSA_merge$t5mfq16_p, FLSA_merge$t5mfq21_p, FLSA_merge$t5mfq27_p, FLSA_merge$t5mfq32_p)
+
+t5.mfq.purity.keys.list <- list(t5.mfq.purity = c(1,2,3,4,5,6))
+
+t5.mfq.purity.scores <- scoreItems(t5.mfq.purity.keys.list, t5.mfq.purity.df, impute = FALSE, min = 0, max = 5)
+summary(t5.mfq.purity.scores)
+describe(t5.mfq.purity.scores$scores)
+t5.mfq.purity.scores$scores[t5.mfq.purity.scores$missing > 0] <- NA
+describe(t5.mfq.purity.scores$scores)
+t5.mfq.purity.scores <- t5.mfq.purity.scores$scores
+FLSA_merge$t5.mfq.purity_comp <- t5.mfq.purity.scores[,]
+
+# Composite Binding Variable
+t5.mfq.bind.df <- data.frame(FLSA_merge$t5.mfq.ingroup_comp, FLSA_merge$t5.mfq.authority_comp, FLSA_merge$t5.mfq.purity_comp)
+t5.mfq.bind.keys.list <- list(t5.mfq.ind = c(1,2,3))
+t5.mfq.bind.scores <- scoreItems(t5.mfq.bind.keys.list, t5.mfq.bind.df, impute = FALSE, min = 0, max = 5)
+summary(t5.mfq.bind.scores) 
+describe(t5.mfq.bind.scores$scores) 
+t5.mfq.bind.scores$scores[t5.mfq.bind.scores$missing > 0] <- NA 
+describe(t5.mfq.bind.scores$scores)
+t5.mfq.bind.scores <- t5.mfq.bind.scores$scores
+FLSA_merge$t5.mfq.bind.scores_comp <- t5.mfq.bind.scores[,]
+```
+
+
+
+
+
+# Write out modified data for future use 
+
+```{r}
+# FLSA_merge <- FLSA_merge[ -c(695, 696, 697, 699, 714, 715, 716, 730, 731, 732, 745, 746) ]
+# write_csv(FLSA_merge, "~/Documents/GitHub/FLSA_Ideology/FLSA_mergeScoredVariables.csv")
+```
+
+# Read in .CSV with scored variables 
+```{r}
+# FLSA_merge <- read_csv("~/Documents/GitHub/FLSA_Ideology/FLSA_mergeScoredVariables.csv")
+```
+
+
+# Intercorrelations of Behavior Variables, Attitudes, Generativity, Etc
+```{r}
+BehaviorCorMat <- FLSA_merge %>% select(hcscore,
+                                        IdentityIntegration_binary, 
+                                        InvolvLevels_composite, 
+                                        InvolvBinary_composite, 
+                                        TotalInfluence_composite,
+                                        t5sie07x,
+                                        t5.PolEngage.Comp,
+                                        t5.CivEngage.Comp,
+                                        t5lgs_m,
+                                        t2.sdo.composite,
+                                        t8.sdo.composite,
+                                        tcomp.sdo.composite,
+                                        t2rwa_composite,
+                                        t8rwa_composite,
+                                        t2and8_rwa_composite,
+                                        t5.mfq.bind.scores_comp,
+                                        t5.mfq.ind.scores_comp)
+StudyDescriptives <- psych::describe(BehaviorCorMat)
+StudyDescriptives
+
+# write_csv(StudyDescriptives, "~/Documents/GitHub/FLSA_Ideology/StudyDescriptives.csv")
+
+BehaviorCorMatCorr <- cor(BehaviorCorMat, use="pairwise.complete.obs")
+BehaviorCorMatCorr
+
+library(apaTables)
+# apa.cor.table(BehaviorCorMat,              
+# filename = "~/Documents/GitHub/FLSA_Ideology/FLSA.HC.StudyVarCorrs.doc",              
+# table.number = 1,              
+# show.conf.interval = TRUE,              
+# show.sig.stars = TRUE,              
+# landscape = TRUE)
+
+
+```
+
+
+
+# Corr Matrix for the t1 Variables
+
+```{r}
+t1CorMat <- FLSA_merge %>% select(t1PolEngageComp,
+                                  t5.PolEngage.Comp,
+                                  t1.CivEngage.Comp,
+                                  t5.CivEngage.Comp,
+                                  lgs_m_t1,
+                                  lgs_m_t5,
+                                  hcscore,
+                                  TotalInfluence_composite)
+t1CorMatCorr <- cor(t1CorMat, use="pairwise.complete.obs")
+t1CorMatCorr
+# apa.cor.table(t1CorMat,              
+# filename = "~/Documents/GitHub/FLSA_Ideology/FLSA.HC.behaviorvar.corrs.doc",              
+# table.number = 1,              
+# show.conf.interval = TRUE,              
+# show.sig.stars = TRUE,              
+# landscape = TRUE)
+```
+

@@ -1,0 +1,72 @@
+---
+title: "plots"
+output: html_document
+date: "2024-03-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## My analysis
+
+I am trying to create an APA style table 
+
+
+```{r}
+# Load your dataset 
+library(papaja)
+library(dplyr)
+library(sjPlot)
+library(broom)
+library(purrr)
+library(tidyverse)
+library(car)
+library(ggfortify)
+library(olsrr)
+library(dplyr)
+library(tidyr)
+library(janitor)
+library(pecan)
+library(nlme)
+library("corrplot")
+library(sjPlot)
+library(patchwork)
+library(sjmisc)
+library(sjlabelled)
+library(lm.beta)
+require(psych)
+FLSA_merge <- read_csv("RMD scripts and files from Cavan/FLSA_mergeScoredVariables.csv")
+
+# Prepare your data (if this step is needed)
+FLSA_merge <- FLSA_merge %>%
+  mutate(black_dc = ifelse(race == 1, 0, ifelse(race == 2, 1, NA_real_)))
+
+ideo <- lm(hcscore ~ black_dc + income_t5 + education + gender + t5sie07x, data = FLSA_merge)
+
+pinv <- lm(t5.PolEngage.Comp ~ black_dc + income_t5 + education + gender + hcscore, data = FLSA_merge)
+
+ceng <- lm(t5.CivEngage.Comp ~ black_dc + income_t5 + education + gender + hcscore, data = FLSA_merge)
+
+
+# Combine models into a list
+models <- list(ideo, pinv, ceng)
+model_names <- c("Ideological Score", "Political Engagement", "Civic Engagement")
+
+# Use map2_df to iterate over models and names, tidy each model, and add the model name
+results_df <- map2_df(models, model_names, ~{
+  tidy(.x) %>%
+    mutate(model = .y)
+})
+
+# Display results using apa_table
+apa_table(
+  results_df,
+  caption = "Regression Models Summary",
+  note = "This table presents the regression analysis results for ideological score, political engagement, and civic engagement.",
+  align = c("l", "l", "r", "r", "r", "r"),
+  col.names = c("Model", "Term", "Estimate", "Std. Error", "Statistic", "P Value")
+)
+
+
+```
